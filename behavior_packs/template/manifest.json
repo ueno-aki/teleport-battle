@@ -1,9 +1,9 @@
 {
     "format_version": 2,
     "header": {
-        "name": "esbuild",
+        "name": "入れ替わりバトロワ",
         "description": "",
-        "uuid": "05254c05-c810-4fb0-aef5-b6c74def117a",
+        "uuid": "8fd020f5-4eac-4976-8012-5b96729c7c9e",
         "version": [0, 0, 1],
         "min_engine_version": [1, 17, 30]
     },
@@ -12,7 +12,7 @@
             "description": "GameTest module",
             "language": "javascript",
             "type": "script",
-            "uuid": "355005a6-3cc0-4c95-a493-8bcdd4f50c77",
+            "uuid": "7f0fc327-e61e-4ad6-88b2-f26c57fc2ca9",
             "version": [1, 0, 0],
             "entry": "scripts/main.js"
         }
