@@ -39,7 +39,8 @@ const EachTeleport = (playerA: Player, playerB: Player, playerC?: Player): void 
 
 export const ShuffleTeleport = (players: Array<Player>): void => {
     const shuffled = ShuffleArray(players, 20);
-    shuffled.forEach((_, index) => {
+    shuffled.forEach((player, index) => {
+        player.onScreenDisplay.setActionBar("§cswapping...");
         if (index % 2 != 0 || shuffled.length == index + 1) return;
         if (shuffled.length == index + 3) {
             EachTeleport(shuffled[index], shuffled[index + 1], shuffled[index + 2]);

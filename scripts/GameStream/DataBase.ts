@@ -25,17 +25,21 @@ export class DataBase {
         return JSON.parse(raw);
     }
     static set(id: number, condition: "playing" | "dead") {
+        if (this.existPlayerID(id, condition)) throw new Error(`id:${id} already exists in <GameData>.${condition}`);
         const data = this.get();
-        if (data[condition].some((v) => v == id)) throw new Error(`id:${id} already exists in <GameData>.${condition}`);
         data[condition].push(id);
         world.setDynamicProperty(DB_KEY, JSON.stringify(data));
     }
     static remove(id: number, condition: "playing" | "dead"): boolean {
         const data = this.get();
-        if (!data[condition].some((v) => v == id)) return false;
+        if (!this.existPlayerID(id, condition)) return false;
         data[condition] = data[condition].filter((v) => v !== id);
         world.setDynamicProperty(DB_KEY, JSON.stringify(data));
         return true;
+    }
+    static existPlayerID(id: number, condition: "playing" | "dead"): boolean {
+        const data = this.get();
+        return data[condition].some((v) => v == id);
     }
     static get isPlayingOnDB(): boolean {
         const DBbool = world.getDynamicProperty(IS_PLAYING_KEY);
