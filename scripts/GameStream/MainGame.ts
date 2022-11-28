@@ -1,5 +1,5 @@
 import { EntityHealthComponent, Player, system, world } from "@minecraft/server";
-import { Execute, randomNum } from "../util/util";
+import { Execute, isAdministrator, randomNum } from "../util/util";
 import { MainGameDB, Spectators } from "./DataBase";
 import { MainGameStream } from "./Stream";
 import { ShuffleTeleport } from "../util/Teleport";
@@ -73,14 +73,18 @@ function gameFinish() {
     const winner = getPlayersAlive()?.[0];
     if (winner) {
         Execute((target) => {
-            target.onScreenDisplay.setTitle("FINISH");
+            target.onScreenDisplay.setTitle("§lFINISH!!!");
             target.tell(`Winner:${winner.name}`);
-            target.runCommandAsync("gamemode a @s").catch((e) => console.error(e, e.stack));
+            target
+                .runCommandAsync(`gamemode ${isAdministrator(target) ? "c" : "a"} @s`)
+                .catch((e) => console.error(e, e.stack));
         });
     } else {
         Execute((target) => {
-            target.onScreenDisplay.setTitle("§l全員死!");
-            target.runCommandAsync("gamemode a @s").catch((e) => console.error(e, e.stack));
+            target.onScreenDisplay.setTitle("§l勝者なし...");
+            target
+                .runCommandAsync(`gamemode ${isAdministrator(target) ? "c" : "a"} @s`)
+                .catch((e) => console.error(e, e.stack));
         });
     }
     MainGameDB.reset("playing");
@@ -89,19 +93,22 @@ function gameFinish() {
     MainGameStream.setPlayingOnDB(false);
     Spectators.clear();
 }
-export function gameStart(resumeBit: /*試合再開*/ boolean = false) {
+interface startOption {
+    resumeBit: boolean;
+}
+export function gameStart(option: /*試合再開*/ startOption = { resumeBit: false }) {
     MainGameStream.setPlayingBit(true);
     MainGameStream.setPlayingOnDB(true);
     MainGameDB.reset("playing");
     Spectators.clear();
-    if (!resumeBit) MainGameDB.reset("dead");
+    if (!option.resumeBit) MainGameDB.reset("dead");
     Execute(
         (player) => {
             MainGameDB.set(+player.id, "playing");
             player.runCommandAsync("gamemode s @s").catch((e) => console.error(e, e.stack));
         },
         // resumeBit ? 死んでる人以外 : 全員
-        (player) => !resumeBit || !MainGameDB.existPlayerID(+player.id, "dead")
+        (player) => !option.resumeBit || !MainGameDB.existPlayerID(+player.id, "dead")
     );
     system.run(mainGame);
 }
@@ -111,6 +118,8 @@ export function gameSuspend() {
     Execute((player) => {
         player.onScreenDisplay.setTitle("FINISH");
         player.tell(`試合を中断しました.`);
-        player.runCommandAsync("gamemode a @s").catch((e) => console.error(e, e.stack));
+        player
+            .runCommandAsync(`gamemode ${isAdministrator(player) ? "c" : "a"} @s`)
+            .catch((e) => console.error(e, e.stack));
     });
 }

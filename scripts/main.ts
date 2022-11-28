@@ -1,12 +1,12 @@
 import { MinecraftItemTypes, Player, world } from "@minecraft/server";
-import { showMainMenu } from "./Form/ContainerMenu/index";
+import { showConfigMenu } from "./Form/src/index";
 import { MainGameDB, Spectators } from "./GameStream/DataBase";
 import { CountDownStream, MainGameStream } from "./GameStream/Stream";
-import { isOP } from "./util/util";
+import { isAdministrator } from "./util/util";
 world.events.beforeItemUse.subscribe(({ item, source }) => {
-    if (!isOP(<Player>source)) return;
+    if (!isAdministrator(<Player>source)) return;
     if (item.typeId === MinecraftItemTypes.compass.id) {
-        showMainMenu(<Player>source);
+        showConfigMenu(<Player>source);
     }
 });
 world.events.beforeChat.subscribe((ev) => {
@@ -22,10 +22,8 @@ world.events.beforeChat.subscribe((ev) => {
             `[Main]playing:${MainGameDB.get().playing},dead:${MainGameDB.get().dead},
             [CountDown]:${CountDownStream.isCountDown},
             [PlayingBit]onCode:${MainGameStream.isPlaying},OnDB:${MainGameStream.isPlayingOnDB}
-            [Spectators]:${[...Spectators]}`
+            [Spectators]:${[...Spectators]}
+            [autoMatch]${MainGameStream.autoMatchEnable}`
         );
-    } else if (message === "reverse") {
-        MainGameStream.setAutoMatchEnable(!MainGameStream.autoMatchEnable);
-        console.warn(`[autoMatch]${MainGameStream.autoMatchEnable}`);
     }
 });

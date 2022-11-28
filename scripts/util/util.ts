@@ -20,19 +20,10 @@ const ShuffleArray = <T>(arr: Array<T>, shuffleCount: number = 0): Array<T> => {
 type playerCall = (target: Player) => void;
 
 /**
- * 
- * @param task 関数
- * @param filter  ``` <Array>.filter(v => <boolean>) ```のこれ
- * 
-## Example
-```ts 
-　Execute(
-　    (player) => {
-　        player.tell('Hello' + player.name + '!!!');
-　    },
-　    (player) => player.hasTag("hello")
-　);
-```
+ *
+ * @param task 処理
+ * @param filter  ```<Array>.filter(v => <boolean>)```のこれ
+ * @example Execute((player) => player.tell(`Hello ${player.name}`),(player) => player.hasTag("greet"));
  */
 const Execute = (task: playerCall | Array<playerCall>, filter: (target: Player) => boolean = () => true) => {
     [...world.getPlayers()].filter(filter).forEach((player) => {
@@ -45,4 +36,4 @@ const Execute = (task: playerCall | Array<playerCall>, filter: (target: Player) 
         }
     });
 };
-export { randomNum, ShuffleArray, Execute, isAdministrator as isOP };
+export { randomNum, ShuffleArray, Execute, isAdministrator };
