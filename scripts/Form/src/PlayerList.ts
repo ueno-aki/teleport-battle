@@ -1,5 +1,4 @@
 import { Player, world } from "@minecraft/server";
-import { ModalFormData } from "@minecraft/server-ui";
 import { showConfigMenu } from ".";
 import { MainGameDB } from "../../GameStream/DataBase";
 import { MainGameStream } from "../../GameStream/Stream";
