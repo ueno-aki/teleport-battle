@@ -1,8 +1,9 @@
 import { EntityHealthComponent, Player, system, world } from "@minecraft/server";
-import { Execute, isAdministrator, randomNum } from "../util/util";
+import { Execute, randomNum } from "../util/util";
 import { MainGameDB, Spectators } from "./DataBase";
 import { MainGameStream } from "./Stream";
 import { ShuffleTeleport } from "../util/Teleport";
+import { OP } from "../util/OP";
 
 const INTERVAL = 100;
 const SHUFFLE_RATE = 200;
@@ -76,14 +77,14 @@ function gameFinish() {
             target.onScreenDisplay.setTitle("§lFINISH!!!");
             target.tell(`Winner:${winner.name}`);
             target
-                .runCommandAsync(`gamemode ${isAdministrator(target) ? "c" : "a"} @s`)
+                .runCommandAsync(`gamemode ${OP.isRegistered(target) ? "c" : "a"} @s`)
                 .catch((e) => console.error(e, e.stack));
         });
     } else {
         Execute((target) => {
             target.onScreenDisplay.setTitle("§l勝者なし...");
             target
-                .runCommandAsync(`gamemode ${isAdministrator(target) ? "c" : "a"} @s`)
+                .runCommandAsync(`gamemode ${OP.isRegistered(target) ? "c" : "a"} @s`)
                 .catch((e) => console.error(e, e.stack));
         });
     }
@@ -119,7 +120,7 @@ export function gameSuspend() {
         player.onScreenDisplay.setTitle("FINISH");
         player.tell(`試合を中断しました.`);
         player
-            .runCommandAsync(`gamemode ${isAdministrator(player) ? "c" : "a"} @s`)
+            .runCommandAsync(`gamemode ${OP.isRegistered(player) ? "c" : "a"} @s`)
             .catch((e) => console.error(e, e.stack));
     });
 }

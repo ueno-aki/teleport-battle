@@ -1,5 +1,5 @@
 import { world } from "@minecraft/server";
-import { DEFINE_ID } from "./DynamicDef";
+import { DEFINE_ID } from "../WorldDef";
 
 export class MainGameStream {
     static get isPlayingOnDB(): boolean {
