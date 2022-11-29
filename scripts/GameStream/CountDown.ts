@@ -10,7 +10,6 @@ export const CountDown = (task: () => void, option: CountDownOptions) => {
     const tick = () => {
         if (current == -1) current = option.amount;
         if (!CountDownStream.isCountDown) {
-            console.warn("a");
             CountDownStream.setCountDownBit(false);
             current = -1;
             return;
